@@ -3,310 +3,308 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>마장중 급식 알리미</title>
+    <title>마장중학교 스마트 알리미</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* CSS 영역 */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        
         body {
-            font-family: 'Pretendard', -apple-system, sans-serif;
-            background-color: #f0f2f5;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .mobile-container {
-            width: 100%;
-            max-width: 400px;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-        }
-
-        header h1 {
-            text-align: center;
-            margin: 20px 0;
-            font-size: 1.4rem;
-            color: #333;
-        }
-
-        /* 슬라이더 영역 */
-        .slider-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-            flex-grow: 1;
-        }
-
-        .view-window {
-            width: 100%;
-            overflow: hidden;
-            border-radius: 25px;
-            background: #fff;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            font-family: 'Inter', -apple-system, 'Pretendard', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .slider-content {
             display: flex;
-            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .meal-card {
             min-width: 100%;
-            padding: 40px 20px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
 
-        .day-label {
-            display: inline-block;
-            padding: 4px 15px;
-            background: #007bff;
-            color: white;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            margin-bottom: 10px;
+        .fade-in {
+            animation: fadeIn 0.3s ease-out forwards;
         }
 
-        .date-text {
-            font-size: 1.3rem;
-            font-weight: bold;
-            margin-bottom: 30px;
-            color: #222;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .menu-items {
-            font-size: 1.15rem;
-            line-height: 2.2;
-            color: #444;
+        .modal-backdrop {
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
         }
 
-        .menu-item {
-            cursor: pointer;
-            display: block;
-            transition: color 0.2s;
-        }
-
-        .menu-item:hover {
-            color: #007bff;
-            text-decoration: underline;
-        }
-
-        /* 버튼 및 인디케이터 */
-        .nav-btn {
-            position: absolute;
-            z-index: 10;
-            background: white;
-            border: none;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            cursor: pointer;
-            font-size: 1.2rem;
-        }
-        .prev { left: -15px; }
-        .next { right: -15px; }
-
-        .dots {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin: 25px 0;
-        }
-        .dot {
-            width: 8px;
-            height: 8px;
-            background: #ccc;
-            border-radius: 50%;
-            transition: 0.3s;
-        }
-        .dot.active {
-            background: #007bff;
-            width: 24px;
-            border-radius: 4px;
-        }
-
-        /* 모달 스타일 */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-content {
-            background: white;
-            padding: 30px 20px;
-            border-radius: 25px;
-            width: 85%;
-            max-width: 320px;
-            text-align: center;
-        }
-        #image-container img {
-            width: 100%;
-            max-height: 250px;
-            object-fit: cover;
-            border-radius: 15px;
-            margin: 15px 0;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-        .loading-spinner { padding: 40px 0; color: #007bff; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
-        
-        .search-btn { margin-top: 20px; width: 100%; padding: 12px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 12px; cursor: pointer; }
-        .close-btn { margin-top: 10px; width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 12px; cursor: pointer; }
+        ::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body>
-
-    <div class="mobile-container">
-        <header>
-            <h1>🏫 마장중 급식</h1>
+<body class="pb-10">
+    <div class="max-w-md mx-auto px-4 pt-6">
+        <header class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight text-slate-900">🏫 마장중학교</h1>
+                <p class="text-sm text-slate-500 font-medium">급식 · 학사일정 · 수행평가</p>
+            </div>
+            <div class="bg-blue-600 p-2.5 rounded-2xl text-white shadow-lg shadow-blue-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+            </div>
         </header>
 
-        <div class="slider-wrapper">
-            <button class="nav-btn prev" onclick="moveSlider(-1)">❮</button>
-            <div class="view-window">
-                <div id="meal-slider" class="slider-content">
-                    <p style="padding:20px;">정보를 불러오는 중...</p>
+        <section class="mb-10">
+            <h2 class="text-lg font-bold mb-4 flex items-center gap-2">🍱 오늘의 급식</h2>
+            <div class="relative">
+                <div class="overflow-hidden bg-white rounded-[2.5rem] shadow-xl shadow-slate-200/60 border border-slate-100">
+                    <div id="meal-slider" class="slider-content">
+                        <div class="meal-card p-12 text-center text-slate-400">급식을 불러오고 있습니다...</div>
+                    </div>
+                </div>
+                
+                <button onclick="moveMealSlider(-1)" class="absolute left-[-12px] top-1/2 -translate-y-1/2 bg-white shadow-xl border border-slate-50 w-11 h-11 rounded-full flex items-center justify-center text-slate-400 z-10 active:scale-90">❮</button>
+                <button onclick="moveMealSlider(1)" class="absolute right-[-12px] top-1/2 -translate-y-1/2 bg-white shadow-xl border border-slate-50 w-11 h-11 rounded-full flex items-center justify-center text-slate-400 z-10 active:scale-90">❯</button>
+            </div>
+            <div id="meal-dots" class="flex justify-center gap-2 mt-5"></div>
+        </section>
+
+        <section class="bg-white rounded-[2.5rem] p-7 shadow-xl shadow-slate-200/50 border border-slate-100">
+            <div class="flex flex-col gap-5 mb-6">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-lg font-bold text-slate-800">📅 학사 일정</h2>
+                    <div class="flex items-center gap-3 bg-slate-50 px-3 py-1.5 rounded-2xl border border-slate-200">
+                        <button onclick="changeScheduleMonth(-1)" class="text-slate-400 hover:text-blue-600 font-bold px-1 text-lg">❮</button>
+                        <span id="schedule-month-label" class="text-sm font-bold text-slate-700 min-w-[80px] text-center">2026.05</span>
+                        <button onclick="changeScheduleMonth(1)" class="text-slate-400 hover:text-blue-600 font-bold px-1 text-lg">❯</button>
+                    </div>
+                </div>
+                
+                <div class="flex flex-wrap gap-2 text-[10px] font-bold">
+                    <span class="px-2 py-1 rounded-lg bg-orange-100 text-orange-600 border border-orange-200">#수행/시험</span>
+                    <span class="px-2 py-1 rounded-lg bg-emerald-100 text-emerald-600 border border-emerald-200">#교육/활동</span>
+                    <span class="px-2 py-1 rounded-lg bg-blue-100 text-blue-600 border border-blue-200">#방학/휴업</span>
+                    <span class="px-2 py-1 rounded-lg bg-red-100 text-red-600 border border-red-200">#공휴일/선거</span>
                 </div>
             </div>
-            <button class="nav-btn next" onclick="moveSlider(1)">❯</button>
-        </div>
-
-        <div class="dots" id="dots"></div>
+            
+            <div id="schedule-list" class="space-y-4 min-h-[150px]">
+                <!-- 일정 데이터 주입 -->
+            </div>
+        </section>
     </div>
 
-    <div id="image-modal" class="modal" onclick="closeModal()">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <h3 id="modal-title">음식 이름</h3>
-            <div id="image-container"></div>
-            <button class="close-btn" onclick="closeModal()">닫기</button>
+    <div id="image-modal" class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center hidden px-6" onclick="closeModal()">
+        <div class="bg-white rounded-[2.5rem] w-full max-w-sm p-7 shadow-2xl" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-5">
+                <h3 id="modal-title" class="text-xl font-bold text-slate-800 truncate pr-4">메뉴 정보</h3>
+                <button onclick="closeModal()" class="text-slate-300 hover:text-slate-500 text-3xl leading-none">&times;</button>
+            </div>
+            <div id="image-container" class="mb-6 aspect-square bg-slate-50 rounded-[2rem] flex items-center justify-center overflow-hidden border border-slate-100"></div>
+            <button onclick="closeModal()" class="w-full py-4 bg-slate-900 text-white font-bold rounded-2xl hover:bg-slate-800 transition-all">닫기</button>
         </div>
     </div>
 
     <script>
-        /* JS 영역 */
         const SCHOOL_CODE = "7134131";
         const OFFICE_CODE = "B10";
-        let currentIndex = 0;
+        
+        let mealIndex = 0;
+        let scheduleDate = new Date(2026, 4, 16); 
 
-        async function initApp() {
+        // 사용자가 요청한 고정 일정 (API 데이터와 병합됨)
+        const MANUAL_SCHEDULE = [
+            { AA_YMD: "20260522", EVENT_NM: "동아리활동", SBTR_DD_SC_NM: "전학년" },
+            { AA_YMD: "20260522", EVENT_NM: "아동폭력/가정폭력 예방교육", SBTR_DD_SC_NM: "전학년" },
+            { AA_YMD: "20260523", EVENT_NM: "토요휴업일", SBTR_DD_SC_NM: "전학년" },
+            { AA_YMD: "20260524", EVENT_NM: "석가탄신일", SBTR_DD_SC_NM: "공휴일" },
+            { AA_YMD: "20260525", EVENT_NM: "대체공휴일", SBTR_DD_SC_NM: "공휴일" },
+            { AA_YMD: "20260530", EVENT_NM: "토요휴업일", SBTR_DD_SC_NM: "전학년" }
+        ];
+
+        window.onload = function() {
+            renderMealSection();
+            fetchSchedule();
+        };
+
+        function getKSTDate() {
+            return new Date(2026, 4, 16);
+        }
+
+        async function renderMealSection() {
+            const slider = document.getElementById('meal-slider');
+            const dots = document.getElementById('meal-dots');
+            slider.innerHTML = '';
+            dots.innerHTML = '';
+
             const dates = [];
-            const dayLabels = ["오늘", "내일", "모레"];
-            
+            const labels = ["오늘", "내일", "모레"];
             for (let i = 0; i < 3; i++) {
-                const d = new Date();
+                const d = getKSTDate();
                 d.setDate(d.getDate() + i);
-                const yyyy = d.getFullYear();
-                const mm = String(d.getMonth() + 1).padStart(2, '0');
-                const dd = String(d.getDate()).padStart(2, '0');
-                dates.push({
-                    full: `${yyyy}${mm}${dd}`,
-                    display: `${mm}월 ${dd}일`,
-                    label: dayLabels[i]
-                });
+                const ymd = d.getFullYear() + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0');
+                dates.push({ ymd, label: labels[i], display: `${d.getMonth() + 1}월 ${d.getDate()}일` });
             }
 
-            const url = `https://open.neis.go.kr/hub/mealServiceDietInfo?Type=json&ATPT_OFCDC_SC_CODE=${OFFICE_CODE}&SD_SCHUL_CODE=${SCHOOL_CODE}&MLSV_FROM_YMD=${dates[0].full}&MLSV_TO_YMD=${dates[2].full}`;
+            const url = `https://open.neis.go.kr/hub/mealServiceDietInfo?Type=json&ATPT_OFCDC_SC_CODE=${OFFICE_CODE}&SD_SCHUL_CODE=${SCHOOL_CODE}&MLSV_FROM_YMD=${dates[0].ymd}&MLSV_TO_YMD=${dates[2].ymd}`;
 
             try {
                 const res = await fetch(url);
                 const data = await res.json();
-                const mealRows = data.mealServiceDietInfo ? data.mealServiceDietInfo[1].row : [];
-                renderMeals(dates, mealRows);
+                const rows = data.mealServiceDietInfo ? data.mealServiceDietInfo[1].row : [];
+
+                dates.forEach((date, i) => {
+                    const meal = rows.find(r => r.MLSV_YMD === date.ymd);
+                    const card = document.createElement('div');
+                    card.className = 'meal-card p-12 text-center flex flex-col items-center justify-center min-h-[250px]';
+                    
+                    let menuHtml = '<p class="text-slate-400">급식 정보가 없습니다 🏖️</p>';
+                    if (meal) {
+                        const items = meal.DDISH_NM.replace(/\([^)]*\)/g, '').split('<br/>');
+                        menuHtml = items.map(item => `<span onclick="showMealImage('${item.trim()}')" class="block py-1 font-bold text-slate-700 cursor-pointer hover:text-blue-600">${item.trim()}</span>`).join('');
+                    }
+
+                    card.innerHTML = `
+                        <span class="text-[11px] font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full mb-3">${date.label} (${date.display})</span>
+                        <div class="space-y-1">${menuHtml}</div>
+                    `;
+                    slider.appendChild(card);
+
+                    const dot = document.createElement('div');
+                    dot.className = `w-1.5 h-1.5 rounded-full transition-all ${i === 0 ? 'bg-blue-600 w-4' : 'bg-slate-200'}`;
+                    dots.appendChild(dot);
+                });
             } catch (e) {
-                document.getElementById('meal-slider').innerHTML = "<div class='meal-card'>데이터 로드 실패</div>";
+                slider.innerHTML = '<div class="meal-card p-12 text-center text-red-400">정보를 불러올 수 없습니다.</div>';
             }
         }
 
-        function renderMeals(dates, mealRows) {
+        function moveMealSlider(dir) {
+            mealIndex = Math.max(0, Math.min(2, mealIndex + dir));
             const slider = document.getElementById('meal-slider');
-            const dotsContainer = document.getElementById('dots');
-            slider.innerHTML = '';
-            dotsContainer.innerHTML = '';
-
-            dates.forEach((dateObj, idx) => {
-                const dayData = mealRows.find(row => row.MLSV_YMD === dateObj.full);
-                const card = document.createElement('div');
-                card.className = 'meal-card';
-                
-                let menuHtml = "급식 정보가 없습니다. 🏖️";
-                if (dayData) {
-                    const menuArray = dayData.DDISH_NM.replace(/\([^)]*\)/g, '').split('<br/>');
-                    menuHtml = menuArray.map(item => 
-                        `<span class="menu-item" onclick="showImagePopup('${item.trim()}')">${item.trim()}</span>`
-                    ).join('');
-                }
-
-                card.innerHTML = `
-                    <span class="day-label">${dateObj.label}</span>
-                    <div class="date-text">${dateObj.display}</div>
-                    <div class="menu-items">${menuHtml}</div>
-                `;
-                slider.appendChild(card);
-
-                const dot = document.createElement('div');
-                dot.className = `dot ${idx === 0 ? 'active' : ''}`;
-                dotsContainer.appendChild(dot);
+            const dots = document.getElementById('meal-dots').children;
+            slider.style.transform = `translateX(-${mealIndex * 100}%)`;
+            Array.from(dots).forEach((dot, i) => {
+                dot.className = `w-1.5 h-1.5 rounded-full transition-all ${i === mealIndex ? 'bg-blue-600 w-4' : 'bg-slate-200'}`;
             });
         }
 
-        function moveSlider(direction) {
-            const slider = document.getElementById('meal-slider');
-            const dots = document.querySelectorAll('.dot');
-            currentIndex += direction;
-            if (currentIndex < 0) currentIndex = 0;
-            if (currentIndex > 2) currentIndex = 2;
-            slider.style.transform = `translateX(-${currentIndex * 100}%)`;
-            dots.forEach((dot, i) => dot.classList.toggle('active', i === currentIndex));
+        async function fetchSchedule() {
+            const year = scheduleDate.getFullYear();
+            const monthNum = scheduleDate.getMonth() + 1;
+            const monthStr = String(monthNum).padStart(2, '0');
+            
+            const kstToday = getKSTDate();
+            const todayYmd = kstToday.getFullYear() + String(kstToday.getMonth() + 1).padStart(2, '0') + String(kstToday.getDate()).padStart(2, '0');
+            const isCurrentMonth = kstToday.getFullYear() === year && (kstToday.getMonth() + 1) === monthNum;
+
+            document.getElementById('schedule-month-label').innerText = `${year}.${monthStr}`;
+            const scheduleList = document.getElementById('schedule-list');
+            scheduleList.innerHTML = `<div class="text-center py-10 text-slate-400 text-sm animate-pulse">일정을 동기화 중입니다...</div>`;
+
+            const fromYmd = `${year}${monthStr}01`;
+            const lastDay = new Date(year, monthNum, 0).getDate();
+            const toYmd = `${year}${monthStr}${lastDay}`;
+
+            try {
+                const res = await fetch(`https://open.neis.go.kr/hub/SchoolSchedule?Type=json&ATPT_OFCDC_SC_CODE=${OFFICE_CODE}&SD_SCHUL_CODE=${SCHOOL_CODE}&AA_FROM_YMD=${fromYmd}&AA_TO_YMD=${toYmd}`);
+                const data = await res.json();
+                
+                let allItems = data.SchoolSchedule ? data.SchoolSchedule[1].row : [];
+                
+                // 수동 데이터와 API 데이터 병합 (중복 방지를 위해 AA_YMD와 EVENT_NM 기준 체크 가능하지만 일단 합침)
+                MANUAL_SCHEDULE.forEach(manual => {
+                    if (manual.AA_YMD.startsWith(`${year}${monthStr}`)) {
+                        const exists = allItems.some(api => api.AA_YMD === manual.AA_YMD && api.EVENT_NM === manual.EVENT_NM);
+                        if (!exists) allItems.push(manual);
+                    }
+                });
+
+                // 날짜순 정렬
+                allItems.sort((a, b) => a.AA_YMD.localeCompare(b.AA_YMD));
+
+                scheduleList.innerHTML = '';
+
+                const filteredItems = allItems.filter(item => {
+                    if (isCurrentMonth) return item.AA_YMD >= todayYmd;
+                    return true; 
+                });
+
+                if (filteredItems.length > 0) {
+                    filteredItems.forEach((item, index) => {
+                        const eventName = item.EVENT_NM.trim();
+                        const day = item.AA_YMD.slice(6, 8);
+                        const itemDate = item.AA_YMD;
+                        const isToday = itemDate === todayYmd;
+                        
+                        let typeTag = '일반', bgColor = 'bg-slate-50', textColor = 'text-slate-500', tagStyle = 'bg-slate-200 text-slate-600';
+
+                        if (eventName.match(/수행|평가|고사|시험|중간|기말|학력|점검/)) {
+                            typeTag = '평가'; bgColor = 'bg-orange-50'; textColor = 'text-orange-600'; tagStyle = 'bg-orange-500 text-white';
+                        } else if (eventName.match(/선거|공휴일|기념일|신정|설날|추석|석가|어린이|현충|광복|개천|한글|성탄|탄신일/)) {
+                            typeTag = '공휴일'; bgColor = 'bg-red-50'; textColor = 'text-red-600'; tagStyle = 'bg-red-500 text-white';
+                        } else if (eventName.match(/휴업|재량|방학|개학|종업/)) {
+                            typeTag = '방학/휴업'; bgColor = 'bg-blue-50'; textColor = 'text-blue-600'; tagStyle = 'bg-blue-500 text-white';
+                        } else if (eventName.match(/동아리|교육|활동|체험|수련|캠프|축제|제|대회/)) {
+                            typeTag = '활동'; bgColor = 'bg-emerald-50'; textColor = 'text-emerald-600'; tagStyle = 'bg-emerald-500 text-white';
+                        }
+
+                        const row = document.createElement('div');
+                        row.className = `flex items-start gap-4 p-4 rounded-3xl transition-all border border-transparent ${bgColor} ${isToday ? 'ring-2 ring-blue-500' : ''} fade-in`;
+                        row.style.animationDelay = `${index * 0.05}s`;
+                        row.innerHTML = `
+                            <div class="${textColor} w-10 h-10 rounded-2xl flex flex-col items-center justify-center flex-shrink-0 bg-white shadow-sm border border-slate-100">
+                                <span class="text-[9px] font-bold leading-none opacity-60">${monthNum}월</span>
+                                <span class="text-sm font-bold">${day}</span>
+                            </div>
+                            <div class="pt-0.5 flex-grow">
+                                <div class="flex items-center gap-2 mb-0.5">
+                                    <h4 class="font-bold text-slate-800 text-sm leading-tight">${eventName}${isToday ? '<span class="ml-1 text-[10px] text-blue-600 font-bold">● 오늘</span>' : ''}</h4>
+                                    <span class="text-[8px] px-1.5 py-0.5 rounded-md font-bold uppercase ${tagStyle}">${typeTag}</span>
+                                </div>
+                                <p class="text-[11px] text-slate-400 font-medium">${item.SBTR_DD_SC_NM || '전학년'}</p>
+                            </div>`;
+                        scheduleList.appendChild(row);
+                    });
+                } else {
+                    scheduleList.innerHTML = `<div class="flex flex-col items-center justify-center py-12 text-slate-400"><span class="text-3xl mb-3">🍃</span><p class="text-sm font-medium">남은 일정이 없습니다.</p></div>`;
+                }
+            } catch (e) {
+                scheduleList.innerHTML = `<div class="text-center py-16 text-red-400 text-sm">데이터를 가져오는데 실패했습니다.</div>`;
+            }
         }
 
-        async function showImagePopup(menuName) {
-            if (!menuName || menuName.includes("없습니다")) return;
+        function changeScheduleMonth(dir) {
+            scheduleDate.setMonth(scheduleDate.getMonth() + dir);
+            fetchSchedule();
+        }
+
+        async function showMealImage(name) {
             const modal = document.getElementById('image-modal');
             const title = document.getElementById('modal-title');
             const container = document.getElementById('image-container');
             
-            title.innerText = menuName;
-            container.innerHTML = `<div class="loading-spinner">🖼️ 이미지를 찾는 중...</div>`;
-            modal.style.display = 'flex';
+            title.innerText = name;
+            modal.classList.remove('hidden');
+            container.innerHTML = `<div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>`;
 
             try {
-                const searchUrl = `https://ko.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(menuName)}`;
-                const response = await fetch(searchUrl);
-                const data = await response.json();
-
-                if (data.thumbnail && data.thumbnail.source) {
-                    container.innerHTML = `
-                        <img src="${data.thumbnail.source}">
-                        <p style="font-size:0.8rem; color:#888;">출처: 위키백과</p>
-                    `;
+                const res = await fetch(`https://ko.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`);
+                const data = await res.json();
+                if (data.thumbnail) {
+                    container.innerHTML = `<img src="${data.thumbnail.source}" class="w-full h-full object-cover">`;
                 } else {
-                    container.innerHTML = `
-                        <div style="padding: 30px 0; font-size: 3rem;">🍲</div>
-                        <p style="color:#666; font-size:0.9rem;">이미지를 찾지 못했습니다.</p>
-                        <button class="search-btn" onclick="window.open('https://www.google.com/search?tbm=isch&q=${menuName}+음식', '_blank')">🔍 구글에서 검색</button>
-                    `;
+                    container.innerHTML = `<div class="text-center p-6"><span class="text-4xl mb-2 block">🍽️</span><p class="text-xs text-slate-400">이미지를 찾을 수 없습니다.</p></div>`;
                 }
-            } catch (error) {
-                container.innerHTML = `<p>이미지 로드 중 오류가 발생했습니다.</p>`;
+            } catch {
+                container.innerHTML = `<p class="text-xs text-slate-400">데이터 로드 실패</p>`;
             }
         }
 
-        function closeModal() { document.getElementById('image-modal').style.display = 'none'; }
-
-        initApp();
+        function closeModal() {
+            document.getElementById('image-modal').classList.add('hidden');
+        }
     </script>
 </body>
 </html>
